@@ -5,7 +5,7 @@ const { genneralAccessToken, genneralRefreshToken } = require("./JwtService")
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
         const { name, email, password, confirmPassword, phone } = newUser
-        try{
+        try {
             const checkUser = await User.findOne({
                 email: email
             })
@@ -30,8 +30,8 @@ const createUser = (newUser) => {
                     data: createUser
                 })
             }
-            
-        } catch (e){
+
+        } catch (e) {
             reject(e)
         }
     })
@@ -40,7 +40,7 @@ const createUser = (newUser) => {
 const loginUser = (userLogin) => {
     return new Promise(async (resolve, reject) => {
         const { name, email, password, confirmPassword, phone } = userLogin
-        try{
+        try {
             const checkUser = await User.findOne({
                 email: email
             })
@@ -68,13 +68,38 @@ const loginUser = (userLogin) => {
                 isAdmin: checkUser.isAdmin
             })
 
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                access_token,
+                refresh_token
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const updateUser = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: id
+            })
+            if (checkUser === null) {
                 resolve({
                     status: 'OK',
-                    message: 'SUCCESS',
-                    access_token,
-                    refresh_token
+                    message: 'The user is not defined'
                 })
-        } catch (e){
+            }
+
+            const updateUser = await User.findByIdAndUpdate(id, data, { new: true })
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: updateUser
+            })
+        } catch (e) {
             reject(e)
         }
     })
@@ -82,5 +107,6 @@ const loginUser = (userLogin) => {
 
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    updateUser
 }
