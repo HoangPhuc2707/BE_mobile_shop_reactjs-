@@ -20,7 +20,6 @@ const createUser = (newUser) => {
                 name,
                 email,
                 password: hash,
-                // confirmPassword: hash,
                 phone
             })
             if (createUser) {
