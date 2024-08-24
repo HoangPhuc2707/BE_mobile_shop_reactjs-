@@ -25,7 +25,7 @@ const refreshTokenJwtService = (token) => {
                     if (err) {
                         console.log('err', err)
                         resolve({
-                            status: 'ERROR',
+                            status: 'ERR',
                             message: 'The authemtication'
                         })
                     }
