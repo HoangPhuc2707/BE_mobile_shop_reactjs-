@@ -66,7 +66,6 @@ const loginUser = (userLogin) => {
                 id: checkUser.id,
                 isAdmin: checkUser.isAdmin
             })
-
             resolve({
                 status: 'OK',
                 message: 'SUCCESS',
