@@ -99,6 +99,24 @@ const deleteUser = async (req, res) => {
     }
 }
 
+const deleteMany = async (req, res) => {
+    try {
+        const ids = req.body.ids
+        if (!ids) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The ids is required'
+            })
+        }
+        const response = await UserService.deleteManyUser(ids)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
 const getDetailsUser = async (req, res) => {
     try {
         const userId = req.params.id
@@ -168,5 +186,6 @@ module.exports = {
     getAllUser,
     getDetailsUser,
     refreshToken,
-    logoutUser
+    logoutUser,
+    deleteMany
 }
