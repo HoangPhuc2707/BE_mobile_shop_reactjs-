@@ -1,9 +1,10 @@
 const Order = require("../models/OrderProduct")
 const Product = require("../models/ProductModel")
+const EmailService = require("../services/EmailService")
 
 const createOrder = (newOrder) => {
     return new Promise(async (resolve, reject) => {
-        const { orderItems, paymentMethod, itemsPrice, shippingPrice, totalPrice, fullName, address, city, phone, user, isPaid, paidAt } = newOrder
+        const { orderItems, paymentMethod, itemsPrice, shippingPrice, totalPrice, fullName, address, city, phone, user, isPaid, paidAt, email } = newOrder
         try {
             const promises = orderItems.map(async (order) => {
                 const productData = await Product.findOneAndUpdate(
@@ -35,6 +36,7 @@ const createOrder = (newOrder) => {
                         isPaid, paidAt
                     })
                     if (createdOrder) {
+                        await EmailService.sendEmailCreateOrder(email, orderItems)
                         return {
                             status: 'OK',
                             message: 'SUCCESS',
@@ -56,6 +58,7 @@ const createOrder = (newOrder) => {
                     message: `Sản phẩm với id${newData.join(',')} không đủ hàng`
                 })
             }
+
             resolve({
                 status: 'OK',
                 message: 'Success'
