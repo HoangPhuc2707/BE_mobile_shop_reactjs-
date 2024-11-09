@@ -19,31 +19,30 @@ const genneralRefreshToken = async (payload) => {
 }
 
 const refreshTokenJwtService = (token) => {
-        return new Promise( (resolve, reject) => {
-            try {
-                jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
-                    if (err) {
-                        console.log('err', err)
-                        resolve({
-                            status: 'ERR',
-                            message: 'The authemtication'
-                        })
-                    }
-                    const access_token = await genneralAccessToken({
-                        id: user?.id,
-                        isAdmin: user?.isAdmin
-                    })
+    return new Promise((resolve, reject) => {
+        try {
+            jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
+                if (err) {
                     resolve({
+                        status: 'ERR',
+                        message: 'The authemtication'
+                    })
+                }
+                const access_token = await genneralAccessToken({
+                    id: user?.id,
+                    isAdmin: user?.isAdmin
+                })
+                resolve({
                     status: 'OK',
                     message: 'Success',
                     access_token
                 })
-                })
-                
-            } catch (e) {
-                reject(e)
-            }
-        })
+            })
+
+        } catch (e) {
+            reject(e)
+        }
+    })
 }
 
 
