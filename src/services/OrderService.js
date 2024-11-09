@@ -21,28 +21,12 @@ const createOrder = (newOrder) => {
                     { new: true }
                 )
                 if (productData) {
-                    const createdOrder = await Order.create({
-                        orderItems,
-                        shippingAddress: {
-                            fullName,
-                            address,
-                            city, phone
-                        },
-                        paymentMethod,
-                        itemsPrice,
-                        shippingPrice,
-                        totalPrice,
-                        user: user,
-                        isPaid, paidAt
-                    })
-                    if (createdOrder) {
-                        await EmailService.sendEmailCreateOrder(email, orderItems)
-                        return {
-                            status: 'OK',
-                            message: 'SUCCESS',
-                        }
+                    return {
+                        status: 'OK',
+                        message: 'SUCCESS'
                     }
-                } else {
+                }
+                else {
                     return {
                         status: 'OK',
                         message: 'ERR',
@@ -53,16 +37,37 @@ const createOrder = (newOrder) => {
             const results = await Promise.all(promises)
             const newData = results && results.filter((item) => item.id)
             if (newData.length) {
+                const arrId = []
+                newData.forEach((item) => {
+                    arrId.push(item.id)
+                })
                 resolve({
                     status: 'ERR',
-                    message: `Sản phẩm với id${newData.join(',')} không đủ hàng`
+                    message: `San pham voi id: ${arrId.join(',')} khong du hang`
                 })
+            } else {
+                const createdOrder = await Order.create({
+                    orderItems,
+                    shippingAddress: {
+                        fullName,
+                        address,
+                        city, phone
+                    },
+                    paymentMethod,
+                    itemsPrice,
+                    shippingPrice,
+                    totalPrice,
+                    user: user,
+                    isPaid, paidAt
+                })
+                if (createdOrder) {
+                    await EmailService.sendEmailCreateOrder(email, orderItems)
+                    resolve({
+                        status: 'OK',
+                        message: 'success'
+                    })
+                }
             }
-
-            resolve({
-                status: 'OK',
-                message: 'Success'
-            })
         } catch (e) {
             reject(e)
         }

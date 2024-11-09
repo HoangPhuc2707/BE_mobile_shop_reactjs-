@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer')
 const dotenv = require('dotenv');
 dotenv.config()
+var inlineBase64 = require('nodemailer-plugin-inline-base64');
 
 const sendEmailCreateOrder = async (email, orderItems) => {
     let transporter = nodemailer.createTransport({
@@ -12,6 +13,7 @@ const sendEmailCreateOrder = async (email, orderItems) => {
             pass: process.env.MAIL_PASSWORD, // generated ethereal password
         },
     });
+    transporter.use('compile', inlineBase64({ cidPrefix: 'somePrefix_' }));
 
     let listItem = '';
     const attachImage = []
@@ -19,7 +21,6 @@ const sendEmailCreateOrder = async (email, orderItems) => {
         listItem += `<div>
     <div>
       Bạn đã đặt sản phẩm <b>${order.name}</b> với số lượng: <b>${order.amount}</b> và giá là: <b>${order.price} VND</b></div>
-      <div>Bên dưới là hình ảnh của sản phẩm</div>
     </div>`
         attachImage.push({ path: order.image })
     })
@@ -29,7 +30,7 @@ const sendEmailCreateOrder = async (email, orderItems) => {
         to: "thphuc2100139@student.ctuet.edu.vn", // list of receivers
         subject: "Bạn đã đặt hàng tại shop TIKKER", // Subject line
         text: "Xin chào!", // plain text body
-        html: `<div><b>Bạn đã đặt hàng thành công tại shop TIKKER</b></div>${orderItems}`,
+        html: `<div><b>Bạn đã đặt hàng thành công tại shop TIKKER</b></div>${listItem}<div>Bên dưới là hình ảnh của sản phẩm</div>`,
         attachments: attachImage,
     });
 }
