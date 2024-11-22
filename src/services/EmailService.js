@@ -27,7 +27,7 @@ const sendEmailCreateOrder = async (email, orderItems) => {
 
     let info = await transporter.sendMail({
         from: process.env.MAIL_ACCOUNT, // sender address
-        to: "thphuc2100139@student.ctuet.edu.vn", // list of receivers
+        to: email, // list of receivers
         subject: "Bạn đã đặt hàng tại shop TIKKER", // Subject line
         text: "Xin chào!", // plain text body
         html: `<div><b>Bạn đã đặt hàng thành công tại shop TIKKER</b></div>${listItem}<div>Bên dưới là hình ảnh của sản phẩm</div>`,
